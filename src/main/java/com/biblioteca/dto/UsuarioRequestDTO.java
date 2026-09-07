@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,7 +24,7 @@ public class UsuarioRequestDTO {
 
     @NotNull(message = "O campo de data de nascimento precisa ser preenchido")
     @Past(message = "A idade precisa ser válida")
-    private LocalDateTime data_nascimento;
+    private LocalDate data_nascimento;
 
 }
 

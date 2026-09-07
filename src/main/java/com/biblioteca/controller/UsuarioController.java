@@ -23,22 +23,15 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Operation(
             summary = "Cadastrar Usuario",
             description = "O usuário digita os dados respectivos para cadastrar, caso deixe algo em branco irá realizar a mensagem de validação"
     )
     public UsuarioModel cadastrarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO){
-        UsuarioModel usuarioModel = new UsuarioModel();
-
-        usuarioModel.setNome(usuarioRequestDTO.getNome());
-        usuarioModel.setEmail(usuarioRequestDTO.getEmail());
-        usuarioModel.setTelefone(usuarioRequestDTO.getTelefone());
-        usuarioModel.setData_Nascimento(usuarioRequestDTO.getData_nascimento());
-
-        return usuarioService.cadastrarUsuario(usuarioModel);
+        return usuarioService.cadastrarUsuario(usuarioRequestDTO);
     }
-    @PutMapping()
+    @PutMapping("/atualizar/{id}")
     @Operation(
             summary = "Atualizar Usuário",
             description = "O usuário digita os dados respectivos para atualizar, caso deixe algo em branco irá realizar a mensagem de validação"
@@ -49,13 +42,13 @@ public class UsuarioController {
         usuarioModel.setNome(usuarioRequestDTO.getNome());
         usuarioModel.setTelefone(usuarioRequestDTO.getTelefone());
         usuarioModel.setEmail(usuarioRequestDTO.getEmail());
-        usuarioModel.setData_Nascimento(usuarioRequestDTO.getData_nascimento());
+        usuarioModel.setData_nascimento(usuarioRequestDTO.getData_nascimento());
 
         return usuarioService.atualizarUsuario(id, usuarioModel);
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     @Operation(
             summary = "Deletar Usuario",
             description = "O usuário vai digitar o id do usuário que queira deletar do banco de dados, caso o id não esteja no banco de dados irá realizar a mensagem personalizada"
@@ -74,7 +67,7 @@ public class UsuarioController {
         return usuarioService.buscarUsuarioPeloNome(nome);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(
             summary = "Listar Usuarios Cadastrados",
             description = "O usuario assim que solicitar o get de listar usuário vai aparecer a lista de todos os usuários cadastrados no banco de dados"
@@ -83,7 +76,7 @@ public class UsuarioController {
         return usuarioService.listarUsuarios();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscar/{id}")
     @Operation(
             summary = "Buscar Usuário pelo Id",
             description = "O usuário vai digitar o numero do id que ele quer encontrar e vai aparecer o id correspondente, caso não esteja cadastrado vai aparecer a mersagem personalizada"

@@ -24,7 +24,7 @@ public class LivroController {
         this.livroService = livroService;
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(
             summary = "Listar todos os livros",
             description = "Retorna uma lista contendo todos os livros cadastrados na biblioteca"
@@ -37,7 +37,7 @@ public class LivroController {
             summary = "Buscar o livro pelo id",
             description = "Retorna o livro pelo id pesquisado e retorna uma exceção personalizada caso o id não exista no banco de dados"
     )
-    @GetMapping("/{id}")
+    @GetMapping("/buscar/{id}")
     public LivroModel buscarLivroPorId(@PathVariable Long id){
         return livroService.buscarLivroPorId(id);
     }
@@ -46,8 +46,8 @@ public class LivroController {
             summary = "Buscar livros pelo nome do autor",
             description = "Retorna o livro pelo autor pesquisado e retorna uma exceção personalizada caso o autor não exista no banco de dados"
     )
-    @GetMapping("/buscar/autor")
-    public List<LivroModel> buscarPorAutor(@RequestParam String autor){
+    @GetMapping("/buscar/autor/{autor}")
+    public List<LivroModel> buscarPorAutor(@PathVariable String autor){
         return livroService.buscarPorAutor(autor);
     }
 
@@ -55,8 +55,8 @@ public class LivroController {
             summary = "Buscar livros pelo titulo do livro",
             description = "Retorna o livro pelo titulo pesquisado e retorna uma exceção personalizada caso o titulo não exista no banco de dados"
     )
-    @GetMapping("/buscar/titulo")
-    public List<LivroModel> buscarPorTitulo(@RequestParam String titulo) {
+    @GetMapping("/buscar/titulo/{titulo}")
+    public List<LivroModel> buscarPorTitulo(@PathVariable String titulo) {
         return livroService.buscarPorTitulo(titulo);
     }
 
@@ -64,7 +64,7 @@ public class LivroController {
             summary = "Cadastrar livro",
             description = "Cadastra o livro e valida caso algum campo nao for preenchido"
     )
-    @PostMapping
+    @PostMapping("/cadastrar")
     public LivroModel cadastrarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO){
         LivroModel livroModel = new LivroModel();
 
@@ -83,7 +83,7 @@ public class LivroController {
             summary = "Atualizar Livro",
             description = "Atualiza o livro pesquisado pelo id, caso o id não exista no banco de dados retorna uma exção personalizada e valida os campos."
     )
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public LivroModel atualizarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, @PathVariable Long id){
 
         LivroModel livroModel = new LivroModel();
@@ -102,7 +102,7 @@ public class LivroController {
             summary = "Deletar livro",
             description = "Deleta livro pelo id e retorna uma exceção personalizada caso o id não exista no banco de dados"
     )
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public void deletarLivroPorId(@PathVariable Long id){
         livroService.deletarLivro(id);
     }

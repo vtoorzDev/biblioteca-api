@@ -1,8 +1,10 @@
 package com.biblioteca.service;
 
+import com.biblioteca.dto.UsuarioRequestDTO;
 import com.biblioteca.exception.UsuarioNaoEncontradoException;
 import com.biblioteca.model.UsuarioModel;
 import com.biblioteca.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,15 @@ import java.util.List;
             return usuarioRepository.findById(id).orElse(null);
         }
 
-        public UsuarioModel cadastrarUsuario(UsuarioModel usuarioModel){
-            return usuarioRepository.save(usuarioModel);
+        public UsuarioModel cadastrarUsuario(@Valid UsuarioRequestDTO usuarioRequestDTO){
+                UsuarioModel usuario = new UsuarioModel();
+
+                usuario.setNome(usuarioRequestDTO.getNome());
+                usuario.setEmail(usuarioRequestDTO.getEmail());
+                usuario.setTelefone(usuarioRequestDTO.getTelefone());
+                usuario.setData_nascimento(usuarioRequestDTO.getData_nascimento());
+
+                return usuarioRepository.save(usuario);
         }
 
         public List<UsuarioModel> listarUsuarios(){
@@ -48,13 +57,12 @@ import java.util.List;
                 usuarioEncontrado.setNome(usuarioModel.getNome());
                 usuarioEncontrado.setEmail(usuarioModel.getEmail());
                 usuarioEncontrado.setTelefone(usuarioModel.getTelefone());
-                usuarioEncontrado.setData_Nascimento(usuarioModel.getData_Nascimento());
+                usuarioEncontrado.setData_nascimento(usuarioModel.getData_nascimento());
 
-                usuarioRepository.save(usuarioEncontrado);
+                return usuarioRepository.save(usuarioEncontrado);
             }
             throw new UsuarioNaoEncontradoException();
-
-        }
+            }
 
         public void deletarUsuario(Long id){
             UsuarioModel usuarioEncontrado = encontrarIdUsuario(id);

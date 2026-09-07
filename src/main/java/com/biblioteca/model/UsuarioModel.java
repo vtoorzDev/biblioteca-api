@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "usuarios")
@@ -20,7 +20,7 @@ public class UsuarioModel {
    private String nome;
    private String email;
    private String telefone;
-   private LocalDateTime data_Nascimento;
+   private LocalDate data_nascimento;
 
 
 }
