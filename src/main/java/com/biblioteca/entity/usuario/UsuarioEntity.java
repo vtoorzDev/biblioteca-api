@@ -16,11 +16,10 @@ public class UsuarioEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
-
+   
    private String nome;
    private String email;
    private String telefone;
+   @Column(name = "data_nascimento")
    private LocalDate dataNascimento;
-
-
 }

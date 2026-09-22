@@ -24,7 +24,7 @@ public class UsuarioRequestDTO {
 
     @NotNull(message = "O campo de data de nascimento precisa ser preenchido")
     @Past(message = "A idade precisa ser válida")
-    private LocalDate data_nascimento;
+    private LocalDate dataNascimento;
 
 }
 

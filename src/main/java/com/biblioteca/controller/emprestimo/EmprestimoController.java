@@ -1,4 +1,4 @@
-package com.biblioteca.controller;
+package com.biblioteca.controller.emprestimo;
 
 import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoDTO;
 import com.biblioteca.entity.emprestimo.EmprestimoEntity;

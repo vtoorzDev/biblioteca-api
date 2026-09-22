@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Emprestimos")
+@Table(name = "emprestimos")
 @Data
 public class EmprestimoEntity {
     @Id
@@ -23,6 +23,9 @@ public class EmprestimoEntity {
     @JoinColumn(name = "livro_id")
     private LivroEntity livroEntity;
 
+    @Column(name = "data_emprestimo", nullable = false)
     private LocalDate dataEmprestimo;
+
+    @Column(nullable = false)
     private boolean status;
 }

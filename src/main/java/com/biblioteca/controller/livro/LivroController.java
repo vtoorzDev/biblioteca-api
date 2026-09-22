@@ -1,4 +1,4 @@
-package com.biblioteca.controller;
+package com.biblioteca.controller.livro;
 
 
 import com.biblioteca.dto.requestDTO.livro.LivroRequestDTO;
