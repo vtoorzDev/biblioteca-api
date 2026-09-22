@@ -42,7 +42,7 @@ public class UsuarioController {
         usuarioModel.setNome(usuarioRequestDTO.getNome());
         usuarioModel.setTelefone(usuarioRequestDTO.getTelefone());
         usuarioModel.setEmail(usuarioRequestDTO.getEmail());
-        usuarioModel.setData_nascimento(usuarioRequestDTO.getData_nascimento());
+        usuarioModel.setDataNascimento(usuarioRequestDTO.getData_nascimento());
 
         return usuarioService.atualizarUsuario(id, usuarioModel);
 

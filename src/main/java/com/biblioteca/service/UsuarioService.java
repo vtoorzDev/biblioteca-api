@@ -28,7 +28,7 @@ import java.util.List;
                 usuario.setNome(usuarioRequestDTO.getNome());
                 usuario.setEmail(usuarioRequestDTO.getEmail());
                 usuario.setTelefone(usuarioRequestDTO.getTelefone());
-                usuario.setData_nascimento(usuarioRequestDTO.getData_nascimento());
+                usuario.setDataNascimento(usuarioRequestDTO.getData_nascimento());
 
                 return usuarioRepository.save(usuario);
         }
@@ -57,7 +57,7 @@ import java.util.List;
                 usuarioEncontrado.setNome(usuarioModel.getNome());
                 usuarioEncontrado.setEmail(usuarioModel.getEmail());
                 usuarioEncontrado.setTelefone(usuarioModel.getTelefone());
-                usuarioEncontrado.setData_nascimento(usuarioModel.getData_nascimento());
+                usuarioEncontrado.setDataNascimento(usuarioModel.getDataNascimento());
 
                 return usuarioRepository.save(usuarioEncontrado);
             }

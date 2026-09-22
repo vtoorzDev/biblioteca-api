@@ -20,7 +20,7 @@ public class UsuarioModel {
    private String nome;
    private String email;
    private String telefone;
-   private LocalDate data_nascimento;
+   private LocalDate dataNascimento;
 
 
 }
