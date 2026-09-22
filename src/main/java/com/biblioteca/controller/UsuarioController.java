@@ -1,8 +1,8 @@
 package com.biblioteca.controller;
 
-import com.biblioteca.dto.UsuarioRequestDTO;
-import com.biblioteca.model.UsuarioModel;
-import com.biblioteca.service.UsuarioService;
+import com.biblioteca.dto.requestDTO.usuario.UsuarioRequestDTO;
+import com.biblioteca.entity.usuario.UsuarioEntity;
+import com.biblioteca.service.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class UsuarioController {
             summary = "Cadastrar Usuario",
             description = "O usuário digita os dados respectivos para cadastrar, caso deixe algo em branco irá realizar a mensagem de validação"
     )
-    public UsuarioModel cadastrarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO){
+    public UsuarioEntity cadastrarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO){
         return usuarioService.cadastrarUsuario(usuarioRequestDTO);
     }
     @PutMapping("/atualizar/{id}")
@@ -36,15 +36,15 @@ public class UsuarioController {
             summary = "Atualizar Usuário",
             description = "O usuário digita os dados respectivos para atualizar, caso deixe algo em branco irá realizar a mensagem de validação"
             )
-    public UsuarioModel atualizarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO, @PathVariable Long id){
-        UsuarioModel usuarioModel = new UsuarioModel();
+    public UsuarioEntity atualizarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioRequestDTO, @PathVariable Long id){
+        UsuarioEntity usuarioEntity = new UsuarioEntity();
 
-        usuarioModel.setNome(usuarioRequestDTO.getNome());
-        usuarioModel.setTelefone(usuarioRequestDTO.getTelefone());
-        usuarioModel.setEmail(usuarioRequestDTO.getEmail());
-        usuarioModel.setDataNascimento(usuarioRequestDTO.getData_nascimento());
+        usuarioEntity.setNome(usuarioRequestDTO.getNome());
+        usuarioEntity.setTelefone(usuarioRequestDTO.getTelefone());
+        usuarioEntity.setEmail(usuarioRequestDTO.getEmail());
+        usuarioEntity.setDataNascimento(usuarioRequestDTO.getData_nascimento());
 
-        return usuarioService.atualizarUsuario(id, usuarioModel);
+        return usuarioService.atualizarUsuario(id, usuarioEntity);
 
     }
 
@@ -63,7 +63,7 @@ public class UsuarioController {
             summary = "Buscar Usuario PeloNome",
             description = "O usuário digita o nome do usuário que queira encontrar, caso o nome não esteja no banco de dados irá realizar a mensagem personalizada"
     )
-    public List<UsuarioModel> buscarUsuarioPeloNome(@RequestParam String nome){
+    public List<UsuarioEntity> buscarUsuarioPeloNome(@RequestParam String nome){
         return usuarioService.buscarUsuarioPeloNome(nome);
     }
 
@@ -72,7 +72,7 @@ public class UsuarioController {
             summary = "Listar Usuarios Cadastrados",
             description = "O usuario assim que solicitar o get de listar usuário vai aparecer a lista de todos os usuários cadastrados no banco de dados"
     )
-    public List<UsuarioModel> listarUsuarios(){
+    public List<UsuarioEntity> listarUsuarios(){
         return usuarioService.listarUsuarios();
     }
 
@@ -81,7 +81,7 @@ public class UsuarioController {
             summary = "Buscar Usuário pelo Id",
             description = "O usuário vai digitar o numero do id que ele quer encontrar e vai aparecer o id correspondente, caso não esteja cadastrado vai aparecer a mersagem personalizada"
     )
-    public UsuarioModel buscarUsuarioPorId(@PathVariable Long id){
+    public UsuarioEntity buscarUsuarioPorId(@PathVariable Long id){
         return usuarioService.buscarUsuarioPorId(id);
     }
 }

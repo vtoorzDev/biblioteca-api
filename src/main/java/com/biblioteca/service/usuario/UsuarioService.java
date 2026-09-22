@@ -1,9 +1,8 @@
-package com.biblioteca.service;
+package com.biblioteca.service.usuario;
 
-import com.biblioteca.dto.UsuarioRequestDTO;
-import com.biblioteca.exception.UsuarioNaoEncontradoException;
-import com.biblioteca.model.UsuarioModel;
-import com.biblioteca.repository.UsuarioRepository;
+import com.biblioteca.dto.requestDTO.usuario.UsuarioRequestDTO;
+import com.biblioteca.entity.usuario.UsuarioEntity;
+import com.biblioteca.repository.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,12 @@ import java.util.List;
 
         }
 
-        private UsuarioModel encontrarIdUsuario(Long id){
+        private UsuarioEntity encontrarIdUsuario(Long id){
             return usuarioRepository.findById(id).orElse(null);
         }
 
-        public UsuarioModel cadastrarUsuario(@Valid UsuarioRequestDTO usuarioRequestDTO){
-                UsuarioModel usuario = new UsuarioModel();
+        public UsuarioEntity cadastrarUsuario(@Valid UsuarioRequestDTO usuarioRequestDTO){
+                UsuarioEntity usuario = new UsuarioEntity();
 
                 usuario.setNome(usuarioRequestDTO.getNome());
                 usuario.setEmail(usuarioRequestDTO.getEmail());
@@ -33,12 +32,12 @@ import java.util.List;
                 return usuarioRepository.save(usuario);
         }
 
-        public List<UsuarioModel> listarUsuarios(){
+        public List<UsuarioEntity> listarUsuarios(){
             return usuarioRepository.findAll();
         }
 
-        public UsuarioModel buscarUsuarioPorId(Long id){
-           UsuarioModel usuarioEncontrado = encontrarIdUsuario(id);
+        public UsuarioEntity buscarUsuarioPorId(Long id){
+           UsuarioEntity usuarioEncontrado = encontrarIdUsuario(id);
 
            if (usuarioEncontrado != null){
                 return usuarioEncontrado;
@@ -46,18 +45,18 @@ import java.util.List;
            throw new UsuarioNaoEncontradoException();
         }
 
-        public List<UsuarioModel> buscarUsuarioPeloNome(String nome) {
+        public List<UsuarioEntity> buscarUsuarioPeloNome(String nome) {
             return usuarioRepository.findByNomeContainingIgnoreCase(nome);
         }
 
-        public UsuarioModel atualizarUsuario(Long id, UsuarioModel usuarioModel){
-            UsuarioModel usuarioEncontrado = encontrarIdUsuario(id);
+        public UsuarioEntity atualizarUsuario(Long id, UsuarioEntity usuarioEntity){
+            UsuarioEntity usuarioEncontrado = encontrarIdUsuario(id);
 
             if (usuarioEncontrado != null){
-                usuarioEncontrado.setNome(usuarioModel.getNome());
-                usuarioEncontrado.setEmail(usuarioModel.getEmail());
-                usuarioEncontrado.setTelefone(usuarioModel.getTelefone());
-                usuarioEncontrado.setDataNascimento(usuarioModel.getDataNascimento());
+                usuarioEncontrado.setNome(usuarioEntity.getNome());
+                usuarioEncontrado.setEmail(usuarioEntity.getEmail());
+                usuarioEncontrado.setTelefone(usuarioEntity.getTelefone());
+                usuarioEncontrado.setDataNascimento(usuarioEntity.getDataNascimento());
 
                 return usuarioRepository.save(usuarioEncontrado);
             }
@@ -65,7 +64,7 @@ import java.util.List;
             }
 
         public void deletarUsuario(Long id){
-            UsuarioModel usuarioEncontrado = encontrarIdUsuario(id);
+            UsuarioEntity usuarioEncontrado = encontrarIdUsuario(id);
 
             if (usuarioEncontrado != null){
                 usuarioRepository.delete(usuarioEncontrado);

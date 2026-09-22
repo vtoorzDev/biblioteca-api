@@ -1,8 +1,8 @@
 package com.biblioteca.controller;
 
-import com.biblioteca.dto.EmprestimoDTO;
-import com.biblioteca.model.EmprestimoModel;
-import com.biblioteca.service.EmprestimoService;
+import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoDTO;
+import com.biblioteca.entity.emprestimo.EmprestimoEntity;
+import com.biblioteca.service.emprestimo.EmprestimoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class EmprestimoController {
     }
 
     @PostMapping("/cadastrar")
-    public EmprestimoModel cadastrarEmprestimo(@Valid @RequestBody EmprestimoDTO emprestimoDTO){
+    public EmprestimoEntity cadastrarEmprestimo(@Valid @RequestBody EmprestimoDTO emprestimoDTO){
         return emprestimoService.cadastrarEmprestimo(emprestimoDTO);
     }
     @DeleteMapping("/deletar/{id}")
@@ -27,11 +27,11 @@ public class EmprestimoController {
     }
 
     @GetMapping("/listar")
-    public List<EmprestimoModel> listarEmprestimos(){
+    public List<EmprestimoEntity> listarEmprestimos(){
         return emprestimoService.listarEmprestimos();
     }
     @GetMapping("/buscar/{id}")
-    public EmprestimoModel buscarEmprestimoPorId(@PathVariable Long id){
+    public EmprestimoEntity buscarEmprestimoPorId(@PathVariable Long id){
         return emprestimoService.buscarEmprestimoPorId(id);
     }
 

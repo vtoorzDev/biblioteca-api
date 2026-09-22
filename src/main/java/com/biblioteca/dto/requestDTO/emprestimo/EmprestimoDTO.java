@@ -1,10 +1,12 @@
-package com.biblioteca.dto;
+package com.biblioteca.dto.requestDTO.emprestimo;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 public class EmprestimoDTO {
     @NotNull(message = "O campo de usuario deve ser preenchido")
     private Long usuarioId;

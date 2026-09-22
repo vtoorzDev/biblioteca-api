@@ -1,16 +1,12 @@
-package com.biblioteca.service;
+package com.biblioteca.service.emprestimo;
 
-import com.biblioteca.dto.EmprestimoDTO;
-import com.biblioteca.exception.EmprestimoNaoEncontradoException;
-import com.biblioteca.exception.LivroNaoDisponivelException;
-import com.biblioteca.exception.LivroNaoEncontradoException;
-import com.biblioteca.exception.UsuarioNaoEncontradoException;
-import com.biblioteca.model.EmprestimoModel;
-import com.biblioteca.model.LivroModel;
-import com.biblioteca.model.UsuarioModel;
-import com.biblioteca.repository.EmprestimoRepository;
-import com.biblioteca.repository.LivroRepository;
-import com.biblioteca.repository.UsuarioRepository;
+import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoDTO;
+import com.biblioteca.entity.emprestimo.EmprestimoEntity;
+import com.biblioteca.entity.livro.LivroEntity;
+import com.biblioteca.entity.usuario.UsuarioEntity;
+import com.biblioteca.repository.emprestimo.EmprestimoRepository;
+import com.biblioteca.repository.livro.LivroRepository;
+import com.biblioteca.repository.usuario.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,17 +29,17 @@ public class EmprestimoService {
         this.livroRepository = livroRepository;
     }
 
-    public List<EmprestimoModel> listarEmprestimos() {
+    public List<EmprestimoEntity> listarEmprestimos() {
         return emprestimoRepository.findAll();
     }
 
-    public EmprestimoModel cadastrarEmprestimo(EmprestimoDTO emprestimoDTO) {
+    public EmprestimoEntity cadastrarEmprestimo(EmprestimoDTO emprestimoDTO) {
 
-        UsuarioModel usuario = usuarioRepository
+        UsuarioEntity usuario = usuarioRepository
                 .findById(emprestimoDTO.getUsuarioId())
                 .orElseThrow(UsuarioNaoEncontradoException::new);
 
-        LivroModel livro = livroRepository
+        LivroEntity livro = livroRepository
                 .findById(emprestimoDTO.getLivroId())
                 .orElseThrow(LivroNaoEncontradoException::new);
 
@@ -54,23 +50,23 @@ public class EmprestimoService {
             throw new LivroNaoDisponivelException();
         }
 
-        EmprestimoModel emprestimo = new EmprestimoModel();
+        EmprestimoEntity emprestimo = new EmprestimoEntity();
 
-        emprestimo.setUsuarioModel(usuario);
-        emprestimo.setLivroModel(livro);
+        emprestimo.setUsuarioEntity(usuario);
+        emprestimo.setLivroEntity(livro);
         emprestimo.setDataEmprestimo(LocalDate.now());
         emprestimo.setStatus(true);
 
         return emprestimoRepository.save(emprestimo);
     }
 
-    public EmprestimoModel buscarEmprestimoPorId(Long id) {
+    public EmprestimoEntity buscarEmprestimoPorId(Long id) {
         return emprestimoRepository.findById(id).orElse(null);
     }
 
     public void deletarEmprestimo(Long id) {
 
-        EmprestimoModel emprestimoEncontrado =
+        EmprestimoEntity emprestimoEncontrado =
                 emprestimoRepository.findById(id).orElse(null);
 
         if (emprestimoEncontrado != null) {

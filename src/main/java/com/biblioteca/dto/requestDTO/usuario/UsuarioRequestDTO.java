@@ -1,4 +1,4 @@
-package com.biblioteca.dto;
+package com.biblioteca.dto.requestDTO.usuario;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;

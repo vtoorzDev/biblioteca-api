@@ -1,9 +1,9 @@
 package com.biblioteca.controller;
 
 
-import com.biblioteca.dto.LivroRequestDTO;
-import com.biblioteca.model.LivroModel;
-import com.biblioteca.service.LivroService;
+import com.biblioteca.dto.requestDTO.livro.LivroRequestDTO;
+import com.biblioteca.entity.livro.LivroEntity;
+import com.biblioteca.service.livro.LivroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class LivroController {
             summary = "Listar todos os livros",
             description = "Retorna uma lista contendo todos os livros cadastrados na biblioteca"
     )
-    public List<LivroModel> listarLivros(){
+    public List<LivroEntity> listarLivros(){
         return livroService.listarLivros();
     }
 
@@ -38,7 +38,7 @@ public class LivroController {
             description = "Retorna o livro pelo id pesquisado e retorna uma exceção personalizada caso o id não exista no banco de dados"
     )
     @GetMapping("/buscar/{id}")
-    public LivroModel buscarLivroPorId(@PathVariable Long id){
+    public LivroEntity buscarLivroPorId(@PathVariable Long id){
         return livroService.buscarLivroPorId(id);
     }
 
@@ -47,7 +47,7 @@ public class LivroController {
             description = "Retorna o livro pelo autor pesquisado e retorna uma exceção personalizada caso o autor não exista no banco de dados"
     )
     @GetMapping("/buscar/autor/{autor}")
-    public List<LivroModel> buscarPorAutor(@PathVariable String autor){
+    public List<LivroEntity> buscarPorAutor(@PathVariable String autor){
         return livroService.buscarPorAutor(autor);
     }
 
@@ -56,7 +56,7 @@ public class LivroController {
             description = "Retorna o livro pelo titulo pesquisado e retorna uma exceção personalizada caso o titulo não exista no banco de dados"
     )
     @GetMapping("/buscar/titulo/{titulo}")
-    public List<LivroModel> buscarPorTitulo(@PathVariable String titulo) {
+    public List<LivroEntity> buscarPorTitulo(@PathVariable String titulo) {
         return livroService.buscarPorTitulo(titulo);
     }
 
@@ -65,17 +65,17 @@ public class LivroController {
             description = "Cadastra o livro e valida caso algum campo nao for preenchido"
     )
     @PostMapping("/cadastrar")
-    public LivroModel cadastrarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO){
-        LivroModel livroModel = new LivroModel();
+    public LivroEntity cadastrarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO){
+        LivroEntity livroEntity = new LivroEntity();
 
-        livroModel.setTitulo(livroRequestDTO.getTitulo());
-        livroModel.setAutor(livroRequestDTO.getAutor());
-        livroModel.setIsbn(livroRequestDTO.getIsbn());
-        livroModel.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
-        livroModel.setCategoria(livroRequestDTO.getCategoria());
-        livroModel.setQuantidade(livroRequestDTO.getQuantidade());
+        livroEntity.setTitulo(livroRequestDTO.getTitulo());
+        livroEntity.setAutor(livroRequestDTO.getAutor());
+        livroEntity.setIsbn(livroRequestDTO.getIsbn());
+        livroEntity.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
+        livroEntity.setCategoria(livroRequestDTO.getCategoria());
+        livroEntity.setQuantidade(livroRequestDTO.getQuantidade());
 
-        return livroService.cadastrarLivro(livroModel);
+        return livroService.cadastrarLivro(livroEntity);
     }
 
 
@@ -84,18 +84,18 @@ public class LivroController {
             description = "Atualiza o livro pesquisado pelo id, caso o id não exista no banco de dados retorna uma exção personalizada e valida os campos."
     )
     @PutMapping("/atualizar/{id}")
-    public LivroModel atualizarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, @PathVariable Long id){
+    public LivroEntity atualizarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, @PathVariable Long id){
 
-        LivroModel livroModel = new LivroModel();
+        LivroEntity livroEntity = new LivroEntity();
 
-        livroModel.setTitulo(livroRequestDTO.getTitulo());
-        livroModel.setAutor(livroRequestDTO.getAutor());
-        livroModel.setIsbn(livroRequestDTO.getIsbn());
-        livroModel.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
-        livroModel.setCategoria(livroRequestDTO.getCategoria());
-        livroModel.setQuantidade(livroRequestDTO.getQuantidade());
+        livroEntity.setTitulo(livroRequestDTO.getTitulo());
+        livroEntity.setAutor(livroRequestDTO.getAutor());
+        livroEntity.setIsbn(livroRequestDTO.getIsbn());
+        livroEntity.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
+        livroEntity.setCategoria(livroRequestDTO.getCategoria());
+        livroEntity.setQuantidade(livroRequestDTO.getQuantidade());
 
-        return livroService.atualizarLivro(id, livroModel);
+        return livroService.atualizarLivro(id, livroEntity);
     }
 
     @Operation(
