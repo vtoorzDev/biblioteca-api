@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Setter
 public class EmprestimoResponseDTO {
     private Long id;
-    private UsuarioEntity usuarioEntity;
-    private LivroEntity livroEntity;
+    private Long usuarioId;
+    private Long livroId;
     private LocalDate dataEmprestimo;
     private boolean status;
 }

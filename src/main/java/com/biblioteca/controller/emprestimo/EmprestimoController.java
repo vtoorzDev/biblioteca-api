@@ -1,6 +1,7 @@
 package com.biblioteca.controller.emprestimo;
 
-import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoDTO;
+import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoRequestDTO;
+import com.biblioteca.dto.responseDTO.emprestimo.EmprestimoResponseDTO;
 import com.biblioteca.entity.emprestimo.EmprestimoEntity;
 import com.biblioteca.service.emprestimo.EmprestimoService;
 import jakarta.validation.Valid;
@@ -18,8 +19,8 @@ public class EmprestimoController {
     }
 
     @PostMapping("/cadastrar")
-    public EmprestimoEntity cadastrarEmprestimo(@Valid @RequestBody EmprestimoDTO emprestimoDTO){
-        return emprestimoService.cadastrarEmprestimo(emprestimoDTO);
+    public EmprestimoResponseDTO cadastrarEmprestimo(@Valid @RequestBody EmprestimoRequestDTO emprestimoRequestDTO, @RequestParam Long idEmprestimo, @RequestParam Long idUsuario, @RequestParam Long idLivro ){
+        return emprestimoService.cadastrarEmprestimo(emprestimoRequestDTO, idEmprestimo, idUsuario, idLivro);
     }
     @DeleteMapping("/deletar/{id}")
     public void deletarEmprestimo(@PathVariable Long id){
@@ -27,12 +28,9 @@ public class EmprestimoController {
     }
 
     @GetMapping("/listar")
-    public List<EmprestimoEntity> listarEmprestimos(){
+    public List<EmprestimoResponseDTO> listarEmprestimos(){
         return emprestimoService.listarEmprestimos();
     }
-    @GetMapping("/buscar/{id}")
-    public EmprestimoEntity buscarEmprestimoPorId(@PathVariable Long id){
-        return emprestimoService.buscarEmprestimoPorId(id);
-    }
+
 
 }

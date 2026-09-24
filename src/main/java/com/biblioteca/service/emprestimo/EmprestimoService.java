@@ -1,16 +1,20 @@
 package com.biblioteca.service.emprestimo;
 
-import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoDTO;
+import com.biblioteca.dto.requestDTO.emprestimo.EmprestimoRequestDTO;
+import com.biblioteca.dto.responseDTO.emprestimo.EmprestimoResponseDTO;
 import com.biblioteca.entity.emprestimo.EmprestimoEntity;
 import com.biblioteca.entity.livro.LivroEntity;
 import com.biblioteca.entity.usuario.UsuarioEntity;
+import com.biblioteca.exception.emprestimo.EmprestimoException;
+import com.biblioteca.exception.livro.LivroException;
+import com.biblioteca.exception.usuario.UsuarioException;
 import com.biblioteca.repository.emprestimo.EmprestimoRepository;
 import com.biblioteca.repository.livro.LivroRepository;
 import com.biblioteca.repository.usuario.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmprestimoService {
@@ -29,48 +33,57 @@ public class EmprestimoService {
         this.livroRepository = livroRepository;
     }
 
-    public List<EmprestimoEntity> listarEmprestimos() {
-        return emprestimoRepository.findAll();
+    private EmprestimoResponseDTO transformarResponse(EmprestimoEntity emprestimoEntity) {
+        EmprestimoResponseDTO emprestimoResponseDTO = new EmprestimoResponseDTO();
+
+        emprestimoResponseDTO.setId(emprestimoEntity.getId());
+        emprestimoResponseDTO.setDataEmprestimo(emprestimoEntity.getDataEmprestimo());
+        emprestimoResponseDTO.setLivroId(emprestimoEntity.getLivroEntity().getId());
+        emprestimoResponseDTO.setUsuarioId(emprestimoEntity.getUsuarioEntity().getId());
+        emprestimoResponseDTO.setStatus(emprestimoEntity.isStatus());
+
+        return emprestimoResponseDTO;
+
     }
 
-    public EmprestimoEntity cadastrarEmprestimo(EmprestimoDTO emprestimoDTO) {
+    public List<EmprestimoResponseDTO> listarEmprestimos(){
+        return emprestimoRepository.findAll().stream().map(this::transformarResponse).toList();
+    }
 
-        UsuarioEntity usuario = usuarioRepository
-                .findById(emprestimoDTO.getUsuarioId())
-                .orElseThrow(UsuarioNaoEncontradoException::new);
+    public EmprestimoResponseDTO cadastrarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Long idEmprestimo, Long usuarioId, Long livroId) {
+        Optional<EmprestimoEntity> emprestimoEncontrado = emprestimoRepository.findById(idEmprestimo);
+        Optional<UsuarioEntity> usuarioEncontrado = usuarioRepository.findById(usuarioId);
+        Optional<LivroEntity> livroEncontrado = livroRepository.findById(livroId);
 
-        LivroEntity livro = livroRepository
-                .findById(emprestimoDTO.getLivroId())
-                .orElseThrow(LivroNaoEncontradoException::new);
-
-        boolean livroEmprestado =
-                emprestimoRepository.existsByLivroModelAndStatus(livro, true);
-
-        if (livroEmprestado) {
-            throw new LivroNaoDisponivelException();
+        if (emprestimoEncontrado.isPresent()) {
+            throw new EmprestimoException("esse emprestimo ja foi feito");
         }
 
-        EmprestimoEntity emprestimo = new EmprestimoEntity();
+        if (usuarioEncontrado.isEmpty()) {
+            throw new UsuarioException("Não encontramos esse usuario no sistema");
+        }
 
-        emprestimo.setUsuarioEntity(usuario);
-        emprestimo.setLivroEntity(livro);
-        emprestimo.setDataEmprestimo(LocalDate.now());
-        emprestimo.setStatus(true);
+        if (livroEncontrado.isEmpty()) {
+            throw new LivroException("Não encontramos esse livro no sistema");
+        }
 
-        return emprestimoRepository.save(emprestimo);
-    }
+        EmprestimoEntity emprestimoCadastrar = new EmprestimoEntity();
+            emprestimoCadastrar.setStatus(true);
+            emprestimoCadastrar.setUsuarioEntity(usuarioEncontrado.get());
+            emprestimoCadastrar.setLivroEntity(livroEncontrado.get());
 
-    public EmprestimoEntity buscarEmprestimoPorId(Long id) {
-        return emprestimoRepository.findById(id).orElse(null);
-    }
+            emprestimoRepository.save(emprestimoCadastrar);
 
-    public void deletarEmprestimo(Long id) {
+            return transformarResponse(emprestimoCadastrar);
+        }
 
-        EmprestimoEntity emprestimoEncontrado =
-                emprestimoRepository.findById(id).orElse(null);
+        public void deletarEmprestimo(Long id) {
+            Optional<EmprestimoEntity> emprestimoEncontrado = emprestimoRepository.findById(id);
 
-        if (emprestimoEncontrado != null) {
-            emprestimoRepository.deleteById(id);
+            if (emprestimoEncontrado.isEmpty()) {
+                throw new EmprestimoException("Emprestimo não encontrado no sistema");
+            }
+            emprestimoRepository.delete(emprestimoEncontrado.get());
         }
     }
-}
+

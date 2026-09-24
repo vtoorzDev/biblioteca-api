@@ -7,10 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmprestimoDTO {
+public class EmprestimoRequestDTO {
     @NotNull(message = "O campo de usuario deve ser preenchido")
     private Long usuarioId;
 
     @NotNull(message = "O campo de livro deve ser preenchido")
     private Long livroId;
+
+
 }
