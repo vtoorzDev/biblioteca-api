@@ -50,7 +50,7 @@ public class EmprestimoService {
         return emprestimoRepository.findAll().stream().map(this::transformarResponse).toList();
     }
 
-    public EmprestimoResponseDTO cadastrarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Long idEmprestimo, Long usuarioId, Long livroId) {
+    public EmprestimoResponseDTO cadastrarEmprestimo(Long idEmprestimo, Long usuarioId, Long livroId) {
         Optional<EmprestimoEntity> emprestimoEncontrado = emprestimoRepository.findById(idEmprestimo);
         Optional<UsuarioEntity> usuarioEncontrado = usuarioRepository.findById(usuarioId);
         Optional<LivroEntity> livroEncontrado = livroRepository.findById(livroId);
@@ -84,6 +84,15 @@ public class EmprestimoService {
                 throw new EmprestimoException("Emprestimo não encontrado no sistema");
             }
             emprestimoRepository.delete(emprestimoEncontrado.get());
+        }
+
+        public List<EmprestimoResponseDTO> listarEmprestimosUsuario(Long id) {
+            Optional<UsuarioEntity> usuarioEncontrado = usuarioRepository.findById(id);
+
+            if (usuarioEncontrado.isPresent()) {
+                return emprestimoRepository.findByUsuarioId(id).stream().map(this::transformarResponse).toList();
+            }
+            throw new EmprestimoException("Esse usuario não possui emprestimos");
         }
     }
 

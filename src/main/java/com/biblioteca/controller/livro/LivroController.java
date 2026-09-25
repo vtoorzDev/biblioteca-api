@@ -2,6 +2,7 @@ package com.biblioteca.controller.livro;
 
 
 import com.biblioteca.dto.requestDTO.livro.LivroRequestDTO;
+import com.biblioteca.dto.responseDTO.livro.LivroResponseDTO;
 import com.biblioteca.entity.livro.LivroEntity;
 import com.biblioteca.service.livro.LivroService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ public class LivroController {
             summary = "Listar todos os livros",
             description = "Retorna uma lista contendo todos os livros cadastrados na biblioteca"
     )
-    public List<LivroEntity> listarLivros(){
+    public List<LivroResponseDTO> listarLivros(){
         return livroService.listarLivros();
     }
 
@@ -38,7 +39,7 @@ public class LivroController {
             description = "Retorna o livro pelo id pesquisado e retorna uma exceção personalizada caso o id não exista no banco de dados"
     )
     @GetMapping("/buscar/{id}")
-    public LivroEntity buscarLivroPorId(@PathVariable Long id){
+    public LivroResponseDTO buscarLivroPorId(@PathVariable Long id){
         return livroService.buscarLivroPorId(id);
     }
 
@@ -47,7 +48,7 @@ public class LivroController {
             description = "Retorna o livro pelo autor pesquisado e retorna uma exceção personalizada caso o autor não exista no banco de dados"
     )
     @GetMapping("/buscar/autor/{autor}")
-    public List<LivroEntity> buscarPorAutor(@PathVariable String autor){
+    public List<LivroResponseDTO> buscarPorAutor(@PathVariable String autor){
         return livroService.buscarPorAutor(autor);
     }
 
@@ -56,7 +57,7 @@ public class LivroController {
             description = "Retorna o livro pelo titulo pesquisado e retorna uma exceção personalizada caso o titulo não exista no banco de dados"
     )
     @GetMapping("/buscar/titulo/{titulo}")
-    public List<LivroEntity> buscarPorTitulo(@PathVariable String titulo) {
+    public List<LivroResponseDTO> buscarPorTitulo(@PathVariable String titulo) {
         return livroService.buscarPorTitulo(titulo);
     }
 
@@ -65,7 +66,7 @@ public class LivroController {
             description = "Cadastra o livro e valida caso algum campo nao for preenchido"
     )
     @PostMapping("/cadastrar")
-    public LivroEntity cadastrarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO){
+    public LivroResponseDTO cadastrarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, Long id){
         LivroEntity livroEntity = new LivroEntity();
 
         livroEntity.setTitulo(livroRequestDTO.getTitulo());
@@ -75,16 +76,15 @@ public class LivroController {
         livroEntity.setCategoria(livroRequestDTO.getCategoria());
         livroEntity.setQuantidade(livroRequestDTO.getQuantidade());
 
-        return livroService.cadastrarLivro(livroEntity);
+        return livroService.cadastrarLivro(livroRequestDTO, id);
     }
-
 
     @Operation(
             summary = "Atualizar Livro",
             description = "Atualiza o livro pesquisado pelo id, caso o id não exista no banco de dados retorna uma exção personalizada e valida os campos."
     )
     @PutMapping("/atualizar/{id}")
-    public LivroEntity atualizarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, @PathVariable Long id){
+    public LivroResponseDTO atualizarLivro(@Valid @RequestBody LivroRequestDTO livroRequestDTO, @PathVariable Long id){
 
         LivroEntity livroEntity = new LivroEntity();
 
@@ -95,9 +95,8 @@ public class LivroController {
         livroEntity.setCategoria(livroRequestDTO.getCategoria());
         livroEntity.setQuantidade(livroRequestDTO.getQuantidade());
 
-        return livroService.atualizarLivro(id, livroEntity);
+        return livroService.atualizarLivro(livroRequestDTO, id);
     }
-
     @Operation(
             summary = "Deletar livro",
             description = "Deleta livro pelo id e retorna uma exceção personalizada caso o id não exista no banco de dados"

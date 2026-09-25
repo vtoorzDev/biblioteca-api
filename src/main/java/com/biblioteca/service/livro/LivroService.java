@@ -1,80 +1,106 @@
 package com.biblioteca.service.livro;
 
+import com.biblioteca.dto.requestDTO.livro.LivroRequestDTO;
+import com.biblioteca.dto.responseDTO.livro.LivroResponseDTO;
 import com.biblioteca.entity.livro.LivroEntity;
+import com.biblioteca.exception.livro.LivroException;
 import com.biblioteca.repository.livro.LivroRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LivroService {
-
     private final LivroRepository livroRepository;
 
     public LivroService(LivroRepository livroRepository) {
         this.livroRepository = livroRepository;
     }
 
-    public List<LivroEntity> listarLivros() {
-        return livroRepository.findAll();
+    public List<LivroResponseDTO> listarLivros() {
+        return livroRepository.findAll().stream().map(this::transformarResponse).toList();
     }
 
-    public LivroEntity buscarLivroPorId(Long id) {
-        LivroEntity livro = livroRepository.findById(id).orElse(null);
+    private LivroResponseDTO transformarResponse(LivroEntity livroEntity) {
+        LivroResponseDTO livroResponseDTO = new LivroResponseDTO();
 
-        if (livro != null) {
-            return livro;
+        livroResponseDTO.setId(livroEntity.getId());
+        livroResponseDTO.setIsbn(livroEntity.getIsbn());
+        livroResponseDTO.setTitulo(livroEntity.getTitulo());
+        livroResponseDTO.setCategoria(livroEntity.getCategoria());
+        livroResponseDTO.setAutor(livroEntity.getAutor());
+        livroResponseDTO.setQuantidade(livroEntity.getQuantidade());
+        livroResponseDTO.setAnoPublicacao(livroEntity.getAnoPublicacao());
+
+        return livroResponseDTO;
+    }
+
+    public LivroResponseDTO buscarLivroPorId(Long id) {
+        Optional<LivroEntity> livroEncontrado = livroRepository.findById(id);
+
+        if(livroEncontrado.isEmpty()) {
+            throw new LivroException("Livro não cadastrado no nosso sistema");
+        }
+        return transformarResponse(livroEncontrado.get());
+    }
+
+    public LivroResponseDTO cadastrarLivro(LivroRequestDTO livroRequestDTO, Long id) {
+        Optional<LivroEntity> livroEncontrado = livroRepository.findById(id);
+
+        if (livroEncontrado.isEmpty()) {
+            LivroEntity livroCadastrado = new LivroEntity();
+
+            livroCadastrado.setIsbn(livroRequestDTO.getIsbn());
+            livroCadastrado.setAutor(livroRequestDTO.getAutor());
+            livroCadastrado.setTitulo(livroRequestDTO.getTitulo());
+            livroCadastrado.setCategoria(livroRequestDTO.getCategoria());
+            livroCadastrado.setQuantidade(livroRequestDTO.getQuantidade());
+            livroCadastrado.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
+
+            livroRepository.save(livroCadastrado);
+
+            return transformarResponse(livroCadastrado);
         }
 
-        throw new LivroNaoEncontradoException();
+        throw new LivroException("Livrvo já cadastrado no sistema");
     }
 
-    public LivroEntity cadastrarLivro(LivroEntity livroEntity) {
-        if (!livroRepository.existsByIsbn(livroEntity.getIsbn())) {
-            return livroRepository.save(livroEntity);
+    public LivroResponseDTO atualizarLivro(LivroRequestDTO livroRequestDTO, Long id) {
+        Optional<LivroEntity> livroEncontrado = livroRepository.findById(id);
+
+        if (livroEncontrado.isPresent()) {
+            LivroEntity livroAtualizado = livroEncontrado.get();
+
+            livroAtualizado.setIsbn(livroRequestDTO.getIsbn());
+            livroAtualizado.setAutor(livroRequestDTO.getAutor());
+            livroAtualizado.setTitulo(livroRequestDTO.getTitulo());
+            livroAtualizado.setCategoria(livroRequestDTO.getCategoria());
+            livroAtualizado.setQuantidade(livroRequestDTO.getQuantidade());
+            livroAtualizado.setAnoPublicacao(livroRequestDTO.getAnoPublicacao());
+
+            livroRepository.save(livroAtualizado);
+
+            return transformarResponse(livroAtualizado);
         }
 
-        throw new IsbnDuplicadoException();
+        throw new LivroException("Livro não encontrado no sistema");
+    }
+    public List<LivroResponseDTO> buscarPorTitulo(String titulo) {
+        return livroRepository.findByTituloContainingIgnoreCase(titulo).stream().map(this::transformarResponse).toList();
     }
 
-    public LivroEntity atualizarLivro(Long id, LivroEntity livroEntity) {
-        LivroEntity livro = livroRepository.findById(id).orElse(null);
-
-        if (livro == null) {
-            throw new LivroNaoEncontradoException();
-        }
-
-        if (livroRepository.existsByIsbn(livroEntity.getIsbn())
-                && !livro.getIsbn().equals(livroEntity.getIsbn())) {
-            throw new IsbnDuplicadoException();
-        }
-
-        livro.setAutor(livroEntity.getAutor());
-        livro.setTitulo(livroEntity.getTitulo());
-        livro.setIsbn(livroEntity.getIsbn());
-        livro.setAnoPublicacao(livroEntity.getAnoPublicacao());
-        livro.setCategoria(livroEntity.getCategoria());
-        livro.setQuantidade(livroEntity.getQuantidade());
-
-        return livroRepository.save(livro);
-    }
-
-    public List<LivroEntity> buscarPorTitulo(String titulo){
-        return livroRepository.findByTituloContainingIgnoreCase(titulo);
-    }
-
-    public List<LivroEntity> buscarPorAutor(String autor){
-        return livroRepository.findByAutorContainingIgnoreCase(autor);
+    public List<LivroResponseDTO> buscarPorAutor(String autor){
+        return livroRepository.findByAutorContainingIgnoreCase(autor).stream().map(this::transformarResponse).toList();
     }
 
     public void deletarLivro(Long id){
-        LivroEntity livro = livroRepository.findById(id).orElse(null);
+        Optional<LivroEntity> livroEncontrado = livroRepository.findById(id);
 
-        if (livro != null){
-            livroRepository.deleteById(id);
-            return;
+        if (livroEncontrado.isPresent()) {
+            livroRepository.delete(livroEncontrado.get());
+        } else {
+            throw new LivroException("Livro não encontrado ");
         }
-
-        throw new LivroNaoEncontradoException();
     }
 }
